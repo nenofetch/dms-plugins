@@ -23,7 +23,7 @@ Screenshot annotation and screen recording plugin for DankMaterialShell.
 | **gpu-screen-recorder**              | Screen recording backend (Hardware NVENC / VA-API; native or Flatpak `com.dec05eba.gpu_screen_recorder`) |
 | **wf-recorder**                      | Alternative CPU screen recording backend (Software libx264, fallback when GPU encoder is unavailable) |
 | **ffmpeg**                           | Video thumbnail generation                         |
-| **ImageMagick** (`magick`/`mogrify`) | WebP/JPEG exports and OCR/QR crop                  |
+| **ImageMagick** (`magick`/`mogrify`) | WebP/JPEG exports, macOS-style frames, and OCR/QR crop |
 | **img2pdf**                          | PDF export                                         |
 | **tesseract**                        | OCR text scanner                                   |
 | **zbar** (`zbarimg`)                 | QR scanner                                         |
@@ -107,6 +107,7 @@ Translations are crowdsourced and managed online via **POEditor**:
     - ![Noctalia toolbar](assets/noctalia_toolbar.png)
 - **[Flameshot](https://github.com/flameshot-org/flameshot)** — Inspiration for the radial menu and tool interaction patterns
 - **[Snapzy](https://github.com/duongductrong/Snapzy)** — Inspiration for the float image / continue-editing workflow
+- **[BanditHijo](https://bandithijo.dev/blog/membuat-hasil-screenshot-linux-seperti-pada-macos)** — macOS-style screenshot framing reference (ImageMagick shadow and border recipe)
 - **vky** and **bodify** (Discord) — Bug reports and feedback that helped polish the plugin
 
 Thanks to everyone who supported, contributed code, gave feedback, and helped the DankMaterialShell community.

@@ -126,6 +126,110 @@ SettingsGroup {
     }
 
     SettingsSection {
+        title: I18n.trFor("quickCapture", "macOS Frame")
+        icon: "filter_frames"
+
+        ToggleSettingPlus {
+            id: macosFrameEnabled
+            settingKey: "macosFrameEnabled"
+            label: I18n.trFor("quickCapture", "Enable macOS-Style Frame")
+            description: I18n.trFor("quickCapture", "Add padding, a drop shadow, and an optional background to saved and copied screenshots.")
+            defaultValue: Defaults.values.macosFrameEnabled
+        }
+
+        SettingsGroup {
+            visible: macosFrameEnabled.value
+
+            Separator {}
+
+            SelectionSettingPlus {
+                id: macosFrameBackground
+                settingKey: "macosFrameBackground"
+                label: I18n.trFor("quickCapture", "Frame Background")
+                options: [
+                    {
+                        label: I18n.trFor("quickCapture", "Transparent"),
+                        value: "transparent"
+                    },
+                    {
+                        label: I18n.trFor("quickCapture", "Solid Color"),
+                        value: "solid"
+                    }
+                ]
+                defaultValue: Defaults.values.macosFrameBackground
+            }
+
+            SettingsGroup {
+                visible: macosFrameBackground.value === "solid"
+
+                Separator {}
+
+                ColorSettingPlus {
+                    settingKey: "macosFrameColor"
+                    label: I18n.trFor("quickCapture", "Background Color")
+                    defaultValue: Theme.surface
+                }
+            }
+
+            Separator {}
+
+            SliderSettingPlus {
+                settingKey: "macosFramePadding"
+                label: I18n.trFor("quickCapture", "Frame Padding")
+                defaultValue: Defaults.values.macosFramePadding
+                minimum: 0
+                maximum: 120
+                unit: "px"
+                leftLabel: "0"
+                rightLabel: "120"
+            }
+
+            Separator {}
+
+            SliderSettingPlus {
+                settingKey: "macosFrameShadowOpacity"
+                label: I18n.trFor("quickCapture", "Shadow Opacity")
+                defaultValue: Defaults.values.macosFrameShadowOpacity
+                minimum: 0
+                maximum: 100
+                unit: "%"
+                leftLabel: "0"
+                rightLabel: "100"
+            }
+
+            Separator {}
+
+            SliderSettingPlus {
+                settingKey: "macosFrameShadowBlur"
+                label: I18n.trFor("quickCapture", "Shadow Blur")
+                defaultValue: Defaults.values.macosFrameShadowBlur
+                minimum: 0
+                maximum: 40
+                unit: "px"
+                leftLabel: "0"
+                rightLabel: "40"
+            }
+
+            Separator {}
+
+            SliderSettingPlus {
+                settingKey: "macosFrameShadowOffset"
+                label: I18n.trFor("quickCapture", "Shadow Offset Y")
+                defaultValue: Defaults.values.macosFrameShadowOffset
+                minimum: 0
+                maximum: 40
+                unit: "px"
+                leftLabel: "0"
+                rightLabel: "40"
+            }
+
+            InfoText {
+                text: I18n.trFor("quickCapture", "Applied when copying or saving. The frame is skipped when the editor background is active to avoid double styling.")
+            }
+        }
+    }
+
+    SettingsSection {
         title: I18n.trFor("quickCapture", "Notifications")
         icon: "notifications"
 

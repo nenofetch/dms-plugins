@@ -24,6 +24,60 @@ QtObject {
         return Paths.expandTilde(String(setting("saveDirectory")));
     }
 
+    function frameNumber(key, fallback, min, max) {
+        const value = Number(setting(key));
+        return isFinite(value) ? Helpers.clamp(value, min, max) : fallback;
+    }
+
+    function isMacosFrameEnabled() {
+        return setting("macosFrameEnabled") === true;
+    }
+
+    function frameBackgroundColor() {
+        if (setting("macosFrameBackground") !== "solid")
+            return "none";
+        const raw = setting("macosFrameColor");
+        return raw ? Helpers.formatHexColor(raw) : Helpers.formatHexColor(Theme.surface);
+    }
+
+    function applyMacosFrame(pngPath, callback, fromEditor) {
+        if (!pngPath || !isMacosFrameEnabled()) {
+            callback(pngPath);
+            return;
+        }
+        if (fromEditor && root.modal && root.modal.effectiveBackgroundMode && root.modal.effectiveBackgroundMode !== "none") {
+            callback(pngPath);
+            return;
+        }
+
+        const background = frameBackgroundColor();
+        const padding = Math.round(frameNumber("macosFramePadding", 30, 0, 200));
+        const shadowOpacity = Math.round(frameNumber("macosFrameShadowOpacity", 50, 0, 100));
+        const shadowBlur = Math.round(frameNumber("macosFrameShadowBlur", 10, 0, 100));
+        const shadowOffset = Math.round(frameNumber("macosFrameShadowOffset", 10, 0, 100));
+        const framedPath = "/tmp/dms_capture_frame_" + Date.now() + "_" + generateRandomString(6) + ".png";
+        const args = ["magick", pngPath];
+
+        if (shadowOpacity > 0) {
+            args.push("(", "+clone", "-background", "#000000", "-shadow", shadowOpacity + "x" + shadowBlur + "+0+" + shadowOffset, ")", "+swap", "-background", background, "-layers", "merge", "+repage");
+        }
+        args.push("-bordercolor", background, "-border", String(padding));
+        if (background !== "none")
+            args.push("-alpha", "remove", "-alpha", "off");
+        args.push(framedPath);
+
+        Proc.runCommand("quickCapture.macosFrame", args, (stdout, exitCode) => {
+            if (exitCode === 0) {
+                cleanupTemp(pngPath);
+                callback(framedPath);
+                return;
+            }
+            console.warn("quickCapture: macOS frame failed (exit " + exitCode + "):", stdout);
+            notifyWarning(I18n.trFor("quickCapture", "macOS frame failed; exporting without frame."));
+            callback(pngPath);
+        });
+    }
+
     function screenshotFilename() {
         const name = Helpers.expandDateTokens(setting("saveFilenamePattern")) || Helpers.expandDateTokens(Defaults.values.saveFilenamePattern);
         return name + "." + setting("outputFormat");
@@ -87,7 +141,7 @@ QtObject {
             console.warn("quickCapture: exportAndExecute is not wired");
             return;
         }
-        root.exportAndExecute(callback);
+        root.exportAndExecute(pngPath => root.applyMacosFrame(pngPath, callback, true));
     }
 
     function convertIfNeeded(pngPath, callback) {
@@ -101,7 +155,12 @@ QtObject {
         let command = [];
         if (format === "webp" || format === "jpg") {
             const quality = String(setting(format === "webp" ? "webpQuality" : "jpegQuality"));
-            command = ["magick", "convert", pngPath, "-quality", quality, finalOut];
+            command = ["magick", "convert", pngPath];
+            if (format === "jpg" && root.isMacosFrameEnabled()) {
+                const flatten = root.frameBackgroundColor();
+                command.push("-background", flatten === "none" ? Helpers.formatHexColor(Theme.surface) : flatten, "-alpha", "remove", "-alpha", "off");
+            }
+            command.push("-quality", quality, finalOut);
         } else if (format === "pdf") {
             command = ["img2pdf", pngPath, "-o", finalOut];
         }

@@ -21,6 +21,23 @@
 
 Select a region, press <kbd>Space</kbd> or <kbd>Enter</kbd> to confirm, scroll the content, then press <kbd>Enter</kbd> to finish stitching. Adjust the scroll interval in settings.
 
+### macOS-Style Frames
+
+Quick Capture can present saved or copied screenshots in a macOS-style frame: configurable padding, a soft drop shadow, and a transparent or solid background. The frame is rendered with ImageMagick after annotations are exported and before the output format is converted.
+
+Enable it in **Settings → Save → macOS Frame**, then adjust the padding, shadow opacity, shadow blur, and shadow offset. The defaults mirror the classic macOS presentation (`30px` padding, `50%` shadow opacity, `10px` blur, `10px` vertical offset).
+
+| Setting | Default | Description |
+| --- | --- | --- |
+| Enable macOS-Style Frame | Off | Apply the frame to saved and copied screenshots |
+| Frame Background | Transparent | Keep the outer padding transparent, or fill it with a solid color |
+| Frame Padding | `30px` | Space between the screenshot shadow and the image edge |
+| Shadow Opacity | `50%` | Darkness of the drop shadow |
+| Shadow Blur | `10px` | Softness of the drop shadow |
+| Shadow Offset Y | `10px` | Vertical distance between the screenshot and its shadow |
+
+The frame is applied to editor exports (including <kbd>Enter</kbd>, <kbd>Ctrl</kbd> + <kbd>S</kbd>, and <kbd>Ctrl</kbd> + <kbd>C</kbd>) and to direct save/copy capture actions. It is skipped automatically when an editor background is active to avoid double styling. Transparent frames are preserved for PNG and WebP; JPEG editor exports flatten transparency onto the frame background (or the current DMS surface color when the frame is transparent).
+
 ## Annotation Tools
 
 ### Tool Selection

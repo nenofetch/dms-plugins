@@ -264,18 +264,31 @@ PluginComponent {
     function openAction(path, action) {
         const fromCC = root.pendingFromControlCenter;
         root.pendingFromControlCenter = false;
+        if (action === "copy" || action === "save" || action === "copyAndSave") {
+            captureActions.applyMacosFrame(path, framedPath => root.dispatchOpenAction(framedPath, path, action, fromCC), false);
+            return;
+        }
+        root.dispatchOpenAction(path, "", action, fromCC);
+    }
+
+    function dispatchOpenAction(path, originalPath, action, fromCC) {
+        const cleanup = () => {
+            captureActions.cleanupTemp(path);
+            if (originalPath && originalPath !== path)
+                captureActions.cleanupTemp(originalPath);
+        };
         switch (action) {
         case "float":
             floatServiceItem.spawnWindow("file://" + path, null, [path]);
             return;
         case "copy":
-            captureActions.copyImage(path, () => captureActions.cleanupTemp(path));
+            captureActions.copyImage(path, cleanup);
             return;
         case "save":
-            captureActions.saveImage(path, () => captureActions.cleanupTemp(path));
+            captureActions.saveImage(path, cleanup);
             return;
         case "copyAndSave":
-            captureActions.copyAndSaveImage(path, () => captureActions.cleanupTemp(path));
+            captureActions.copyAndSaveImage(path, cleanup);
             return;
         default:
             if (fromCC && root.hideControlCenter)

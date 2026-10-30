@@ -48,6 +48,9 @@ When `Shift` is held down during mouse dragging, ending coordinates are mathemat
 ### Background Layout Wrapping
 When background modes (Solid or Gradient) are enabled, the screenshot is wrapped within a padded canvas container with configurable padding, corner radius, drop shadow, and aspect ratio ("1:1", "16:9", "4:3", or "Auto").
 
+### macOS-Style Frame Export
+When `macosFrameEnabled` is set, `QuickCaptureActions` post-processes the rendered PNG with ImageMagick before format conversion. The command clones the screenshot to render a drop shadow, merges the shadow beneath the original, then adds a transparent or solid border. Editor exports skip the frame when a background mode is active to avoid applying two styles. The same helper is used by direct save/copy capture actions.
+
 ---
 
 ## 3. Window & Coordinate Mapping (Wayland)

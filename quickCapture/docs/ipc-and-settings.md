@@ -140,3 +140,17 @@ The following settings are registered inside DMS settings manager and stored in 
 }
 ```
 *(Values can be customized via the Quick Capture Settings tab in DMS panel settings).*
+
+### macOS Frame Settings
+
+The macOS-style frame is configurable through the **Settings → Save → macOS Frame** section:
+
+| Key | Default | Description |
+| :--- | :--- | :--- |
+| `macosFrameEnabled` | `false` | Apply the frame to saved and copied screenshots. |
+| `macosFrameBackground` | `"transparent"` | `"transparent"` keeps the outer padding transparent; `"solid"` fills it with `macosFrameColor`. |
+| `macosFrameColor` | DMS surface color | Background color used when `macosFrameBackground` is `"solid"`. |
+| `macosFramePadding` | `30` | Padding around the screenshot and shadow, in pixels. |
+| `macosFrameShadowOpacity` | `50` | Drop shadow opacity percentage (`0` disables the shadow). |
+| `macosFrameShadowBlur` | `10` | Drop shadow blur radius in pixels. |
+| `macosFrameShadowOffset` | `10` | Vertical drop shadow offset in pixels. |
